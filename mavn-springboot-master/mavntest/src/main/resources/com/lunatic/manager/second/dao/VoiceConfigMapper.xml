@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lunatic.manager.second.dao.VoiceConfigMapper">
+  <resultMap id="BaseResultMap" type="com.lunatic.manager.second.doman.VoiceConfig">
+    <id column="voice_config_id" jdbcType="INTEGER" property="voiceConfigId" />
+    <result column="voice_ip" jdbcType="VARCHAR" property="voiceIp" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="phone_password" jdbcType="VARCHAR" property="phonePassword" />
+    <result column="socket_port" jdbcType="TINYINT" property="socketPort" />
+    <result column="timeout" jdbcType="TINYINT" property="timeout" />
+    <result column="compatible_type" jdbcType="TINYINT" property="compatibleType" />
+    <result column="dr" jdbcType="TINYINT" property="dr" />
+    <result column="ts" jdbcType="TIMESTAMP" property="ts" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    voice_config_id, voice_ip, username, password, phone_password, socket_port, timeout, 
+    compatible_type, dr, ts
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_voice_config
+    where voice_config_id = #{voiceConfigId,jdbcType=INTEGER}  and dr=0
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_voice_config
+    where voice_config_id = #{voiceConfigId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.lunatic.manager.second.doman.VoiceConfig">
+    insert into t_voice_config (voice_config_id, voice_ip, username, 
+      password, phone_password, socket_port, 
+      timeout, compatible_type, dr, 
+      ts)
+    values (#{voiceConfigId,jdbcType=INTEGER}, #{voiceIp,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, 
+      #{password,jdbcType=VARCHAR}, #{phonePassword,jdbcType=VARCHAR}, #{socketPort,jdbcType=TINYINT}, 
+      #{timeout,jdbcType=TINYINT}, #{compatibleType,jdbcType=TINYINT}, #{dr,jdbcType=TINYINT}, 
+      #{ts,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.lunatic.manager.second.doman.VoiceConfig">
+    insert into t_voice_config
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="voiceConfigId != null">
+        voice_config_id,
+      </if>
+      <if test="voiceIp != null">
+        voice_ip,
+      </if>
+      <if test="username != null">
+        username,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="phonePassword != null">
+        phone_password,
+      </if>
+      <if test="socketPort != null">
+        socket_port,
+      </if>
+      <if test="timeout != null">
+        timeout,
+      </if>
+      <if test="compatibleType != null">
+        compatible_type,
+      </if>
+      <if test="dr != null">
+        dr,
+      </if>
+      <if test="ts != null">
+        ts,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="voiceConfigId != null">
+        #{voiceConfigId,jdbcType=INTEGER},
+      </if>
+      <if test="voiceIp != null">
+        #{voiceIp,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="phonePassword != null">
+        #{phonePassword,jdbcType=VARCHAR},
+      </if>
+      <if test="socketPort != null">
+        #{socketPort,jdbcType=TINYINT},
+      </if>
+      <if test="timeout != null">
+        #{timeout,jdbcType=TINYINT},
+      </if>
+      <if test="compatibleType != null">
+        #{compatibleType,jdbcType=TINYINT},
+      </if>
+      <if test="dr != null">
+        #{dr,jdbcType=TINYINT},
+      </if>
+      <if test="ts != null">
+        #{ts,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lunatic.manager.second.doman.VoiceConfig">
+    update t_voice_config
+    <set>
+      <if test="voiceIp != null">
+        voice_ip = #{voiceIp,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null">
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="phonePassword != null">
+        phone_password = #{phonePassword,jdbcType=VARCHAR},
+      </if>
+      <if test="socketPort != null">
+        socket_port = #{socketPort,jdbcType=TINYINT},
+      </if>
+      <if test="timeout != null">
+        timeout = #{timeout,jdbcType=TINYINT},
+      </if>
+      <if test="compatibleType != null">
+        compatible_type = #{compatibleType,jdbcType=TINYINT},
+      </if>
+      <if test="dr != null">
+        dr = #{dr,jdbcType=TINYINT},
+      </if>
+      <if test="ts != null">
+        ts = #{ts,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where voice_config_id = #{voiceConfigId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lunatic.manager.second.doman.VoiceConfig">
+    update t_voice_config
+    set voice_ip = #{voiceIp,jdbcType=VARCHAR},
+      username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      phone_password = #{phonePassword,jdbcType=VARCHAR},
+      socket_port = #{socketPort,jdbcType=TINYINT},
+      timeout = #{timeout,jdbcType=TINYINT},
+      compatible_type = #{compatibleType,jdbcType=TINYINT},
+      dr = #{dr,jdbcType=TINYINT},
+      ts = #{ts,jdbcType=TIMESTAMP}
+    where voice_config_id = #{voiceConfigId,jdbcType=INTEGER}
+  </update>
+  <select id="selectVoiceConfig" resultMap="BaseResultMap">
+  	select
+  	<include refid="Base_Column_List" />
+    from t_voice_config
+  </select>
+</mapper>

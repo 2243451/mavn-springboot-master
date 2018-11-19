@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lunatic.manager.primary.dao.DeviceMapper">
+	<resultMap id="BaseResultMap" type="com.lunatic.manager.primary.doman.Device">
+		<id column="device_id" jdbcType="INTEGER" property="deviceId" />
+		<result column="org_id" jdbcType="INTEGER" property="orgId" />
+		<result column="device_name" jdbcType="VARCHAR" property="deviceName" />
+		<result column="device_alias" jdbcType="VARCHAR" property="deviceAlias" />
+		<result column="device_code" jdbcType="VARCHAR" property="deviceCode" />
+		<result column="device_model" jdbcType="VARCHAR" property="deviceModel" />
+		<result column="device_figureCode" jdbcType="VARCHAR" property="deviceFigurecode" />
+		<result column="device_manufactory" jdbcType="VARCHAR"
+			property="deviceManufactory" />
+		<result column="device_agent" jdbcType="VARCHAR" property="deviceAgent" />
+		<result column="device_serialNo" jdbcType="VARCHAR" property="deviceSerialno" />
+		<result column="device_position" jdbcType="VARCHAR" property="devicePosition" />
+		<result column="device_material" jdbcType="VARCHAR" property="deviceMaterial" />
+		<result column="device_producingDate" jdbcType="TIMESTAMP"
+			property="deviceProducingdate" />
+		<result column="device_enablingDate" jdbcType="TIMESTAMP"
+			property="deviceEnablingdate" />
+		<result column="device_keeper" jdbcType="VARCHAR" property="deviceKeeper" />
+		<result column="deviceKind_id" jdbcType="INTEGER" property="devicekindId" />
+		<result column="edstatus" jdbcType="BIT" property="edstatus" />
+		<result column="dr" jdbcType="BIT" property="dr" />
+		<result column="sorting" jdbcType="TINYINT" property="sorting" />
+		<result column="ts" jdbcType="TIMESTAMP" property="ts" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		device_id, org_id, device_name, device_alias, device_code,
+		device_model,
+		device_figureCode,
+		device_manufactory, device_agent,
+		device_serialNo, device_position, device_material,
+		device_producingDate , DATE_FORMAT(device_enablingDate,'%Y-%m-%d %H:%i:%s') as device_enablingDate , device_keeper,
+		deviceKind_id, edstatus,
+		dr, sorting, ts
+	</sql>
+
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_device
+		where dr = 0
+		<if test="deviceId != null">
+			and device_id = #{deviceId,jdbcType=INTEGER}
+		</if>
+	</select>
+	<select id="selectAllDeviceList" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_device where dr=0
+	</select>
+	<select id="getListByMultiId" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_device
+		where dr = 0
+		and device_id in
+		<foreach collection="idList" item="item" open="(" separator=","
+			close=")">
+			#{item}
+		</foreach>
+	</select>
+	<select id="selectDeviceInfoBySeatId" parameterType="java.lang.Integer"
+		resultType="java.util.Map">
+				SELECT DISTINCT
+				t2.device_id AS device_id,
+				t2.device_code AS device_code,
+				t3.idseat_name AS idseat_name
+			FROM
+				t_idseat_device t1,
+				t_device t2,
+				t_idseat t3
+			WHERE
+				t1.device_id = t2.device_id
+			AND t1.idseat_id = t3.idseat_id
+			AND t1.dr = 0
+			AND t2.dr = 0
+			AND t1.idseat_id =
+					#{id,jdbcType=INTEGER}
+			ORDER BY
+				t2.device_code ASC
+	</select>
+	<update id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		update t_device
+		set dr = 1
+		where device_id = #{deviceId,jdbcType=INTEGER}
+	</update>
+	<insert id="insert" parameterType="com.lunatic.manager.primary.doman.Device">
+		insert into t_device
+		(device_id, org_id, device_name,
+		device_alias, device_code,
+		device_model,
+		device_figureCode, device_manufactory, device_agent,
+		device_serialNo, device_position, device_material,
+		device_producingDate, device_enablingDate,
+		device_keeper,
+		deviceKind_id, edstatus,
+		dr, sorting, ts)
+		values
+		(#{deviceId,jdbcType=INTEGER}, #{orgId,jdbcType=INTEGER},
+		#{deviceName,jdbcType=VARCHAR},
+		#{deviceAlias,jdbcType=VARCHAR},
+		#{deviceCode,jdbcType=VARCHAR}, #{deviceModel,jdbcType=VARCHAR},
+		#{deviceFigurecode,jdbcType=VARCHAR},
+		#{deviceManufactory,jdbcType=VARCHAR},
+		#{deviceAgent,jdbcType=VARCHAR},
+		#{deviceSerialno,jdbcType=VARCHAR},
+		#{devicePosition,jdbcType=VARCHAR},
+		#{deviceMaterial,jdbcType=VARCHAR},
+		#{deviceProducingdate,jdbcType=TIMESTAMP},
+		#{deviceEnablingdate,jdbcType=TIMESTAMP},
+		#{deviceKeeper,jdbcType=VARCHAR}, #{devicekindId,jdbcType=INTEGER},
+		#{edstatus,jdbcType=BIT},
+		#{dr,jdbcType=BIT},
+		#{sorting,jdbcType=TINYINT}, #{ts,jdbcType=TIMESTAMP})
+	</insert>
+	<insert id="insertSelective" parameterType="com.lunatic.manager.primary.doman.Device">
+		insert into t_device
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="deviceId != null">
+				device_id,
+			</if>
+			<if test="orgId != null">
+				org_id,
+			</if>
+			<if test="deviceName != null">
+				device_name,
+			</if>
+			<if test="deviceAlias != null">
+				device_alias,
+			</if>
+			<if test="deviceCode != null">
+				device_code,
+			</if>
+			<if test="deviceModel != null">
+				device_model,
+			</if>
+			<if test="deviceFigurecode != null">
+				device_figureCode,
+			</if>
+			<if test="deviceManufactory != null">
+				device_manufactory,
+			</if>
+			<if test="deviceAgent != null">
+				device_agent,
+			</if>
+			<if test="deviceSerialno != null">
+				device_serialNo,
+			</if>
+			<if test="devicePosition != null">
+				device_position,
+			</if>
+			<if test="deviceMaterial != null">
+				device_material,
+			</if>
+			<if test="deviceProducingdate != null">
+				device_producingDate,
+			</if>
+			<if test="deviceEnablingdate != null">
+				device_enablingDate,
+			</if>
+			<if test="deviceKeeper != null">
+				device_keeper,
+			</if>
+			<if test="devicekindId != null">
+				deviceKind_id,
+			</if>
+			<if test="edstatus != null">
+				edstatus,
+			</if>
+			<if test="dr != null">
+				dr,
+			</if>
+			<if test="sorting != null">
+				sorting,
+			</if>
+			<if test="ts != null">
+				ts,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="deviceId != null">
+				#{deviceId,jdbcType=INTEGER},
+			</if>
+			<if test="orgId != null">
+				#{orgId,jdbcType=INTEGER},
+			</if>
+			<if test="deviceName != null">
+				#{deviceName,jdbcType=VARCHAR},
+			</if>
+			<if test="deviceAlias != null">
+				#{deviceAlias,jdbcType=VARCHAR},
+			</if>
+			<if test="deviceCode != null">
+				#{deviceCode,jdbcType=VARCHAR},
+			</if>
+			<if test="deviceModel != null">
+				#{deviceModel,jdbcType=VARCHAR},
+			</if>
+			<if test="deviceFigurecode != null">
+				#{deviceFigurecode,jdbcType=VARCHAR},
+			</if>
+			<if test="deviceManufactory != null">
+				#{deviceManufactory,jdbcType=VARCHAR},
+			</if>
+			<if test="deviceAgent != null">
+				#{deviceAgent,jdbcType=VARCHAR},
+			</if>
+			<if test="deviceSerialno != null">
+				#{deviceSerialno,jdbcType=VARCHAR},
+			</if>
+			<if test="devicePosition != null">
+				#{devicePosition,jdbcType=VARCHAR},
+			</if>
+			<if test="deviceMaterial != null">
+				#{deviceMaterial,jdbcType=VARCHAR},
+			</if>
+			<if test="deviceProducingdate != null">
+				#{deviceProducingdate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="deviceEnablingdate != null">
+				#{deviceEnablingdate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="deviceKeeper != null">
+				#{deviceKeeper,jdbcType=VARCHAR},
+			</if>
+			<if test="devicekindId != null">
+				#{devicekindId,jdbcType=INTEGER},
+			</if>
+			<if test="edstatus != null">
+				#{edstatus,jdbcType=BIT},
+			</if>
+			<if test="dr != null">
+				#{dr,jdbcType=BIT},
+			</if>
+			<if test="sorting != null">
+				#{sorting,jdbcType=TINYINT},
+			</if>
+			<if test="ts != null">
+				#{ts,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.lunatic.manager.primary.doman.Device">
+		update t_device
+		<set>
+			<if test="orgId != null">
+				org_id = #{orgId,jdbcType=INTEGER},
+			</if>
+			<if test="deviceName != null">
+				device_name = #{deviceName,jdbcType=VARCHAR},
+			</if>
+			<if test="deviceAlias != null">
+				device_alias = #{deviceAlias,jdbcType=VARCHAR},
+			</if>
+			<if test="deviceCode != null">
+				device_code = #{deviceCode,jdbcType=VARCHAR},
+			</if>
+			<if test="deviceModel != null">
+				device_model = #{deviceModel,jdbcType=VARCHAR},
+			</if>
+			<if test="deviceFigurecode != null">
+				device_figureCode = #{deviceFigurecode,jdbcType=VARCHAR},
+			</if>
+			<if test="deviceManufactory != null">
+				device_manufactory =
+				#{deviceManufactory,jdbcType=VARCHAR},
+			</if>
+			<if test="deviceAgent != null">
+				device_agent = #{deviceAgent,jdbcType=VARCHAR},
+			</if>
+			<if test="deviceSerialno != null">
+				device_serialNo = #{deviceSerialno,jdbcType=VARCHAR},
+			</if>
+			<if test="devicePosition != null">
+				device_position = #{devicePosition,jdbcType=VARCHAR},
+			</if>
+			<if test="deviceMaterial != null">
+				device_material = #{deviceMaterial,jdbcType=VARCHAR},
+			</if>
+			<if test="deviceProducingdate != null">
+				device_producingDate =
+				#{deviceProducingdate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="deviceEnablingdate != null">
+				device_enablingDate =
+				#{deviceEnablingdate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="deviceKeeper != null">
+				device_keeper = #{deviceKeeper,jdbcType=VARCHAR},
+			</if>
+			<if test="devicekindId != null">
+				deviceKind_id = #{devicekindId,jdbcType=INTEGER},
+			</if>
+			<if test="edstatus != null">
+				edstatus = #{edstatus,jdbcType=BIT},
+			</if>
+			<if test="dr != null">
+				dr = #{dr,jdbcType=BIT},
+			</if>
+			<if test="sorting != null">
+				sorting = #{sorting,jdbcType=TINYINT},
+			</if>
+			<if test="ts != null">
+				ts = #{ts,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where device_id = #{deviceId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.lunatic.manager.primary.doman.Device">
+		update t_device
+		set org_id = #{orgId,jdbcType=INTEGER},
+		device_name =
+		#{deviceName,jdbcType=VARCHAR},
+		device_alias =
+		#{deviceAlias,jdbcType=VARCHAR},
+		device_code =
+		#{deviceCode,jdbcType=VARCHAR},
+		device_model =
+		#{deviceModel,jdbcType=VARCHAR},
+		device_figureCode =
+		#{deviceFigurecode,jdbcType=VARCHAR},
+		device_manufactory =
+		#{deviceManufactory,jdbcType=VARCHAR},
+		device_agent =
+		#{deviceAgent,jdbcType=VARCHAR},
+		device_serialNo =
+		#{deviceSerialno,jdbcType=VARCHAR},
+		device_position =
+		#{devicePosition,jdbcType=VARCHAR},
+		device_material =
+		#{deviceMaterial,jdbcType=VARCHAR},
+		device_producingDate =
+		#{deviceProducingdate,jdbcType=TIMESTAMP},
+		device_enablingDate =
+		#{deviceEnablingdate,jdbcType=TIMESTAMP},
+		device_keeper =
+		#{deviceKeeper,jdbcType=VARCHAR},
+		deviceKind_id =
+		#{devicekindId,jdbcType=INTEGER},
+		edstatus = #{edstatus,jdbcType=BIT},
+		dr = #{dr,jdbcType=BIT},
+		sorting = #{sorting,jdbcType=TINYINT},
+		ts =
+		#{ts,jdbcType=TIMESTAMP}
+		where device_id = #{deviceId,jdbcType=INTEGER}
+	</update>
+	<select id="getAllDeviceCode" resultType="java.util.Map">
+		select device_code,
+		device_id
+		from t_device
+	</select>
+
+	<select id="selectListByDevice" parameterType="com.lunatic.manager.primary.doman.Device"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_device
+		where dr = 0
+		<if test="deviceId != null">
+			and deviceId = #{deviceId,jdbcType=INTEGER}
+		</if>
+		<if test="orgId != null">
+			and org_id = #{orgId,jdbcType=INTEGER}
+		</if>
+		<if test="deviceName != null">
+			and device_name like "%"#{deviceName,jdbcType=VARCHAR}"%"
+		</if>
+		<if test="deviceAlias != null">
+			and device_alias = #{deviceAlias,jdbcType=VARCHAR}
+		</if>
+		<if test="deviceCode != null">
+			and device_code = #{deviceCode,jdbcType=VARCHAR}
+		</if>
+		<if test="deviceModel != null">
+			and device_model = #{deviceModel,jdbcType=VARCHAR}
+		</if>
+		<if test="deviceFigurecode != null">
+			and device_figureCode =
+			#{deviceFigurecode,jdbcType=VARCHAR}
+		</if>
+		<if test="deviceManufactory != null">
+			and device_manufactory =
+			#{deviceManufactory,jdbcType=VARCHAR}
+		</if>
+		<if test="deviceAgent != null">
+			and device_agent = #{deviceAgent,jdbcType=VARCHAR}
+		</if>
+		<if test="deviceSerialno != null">
+			and device_serialNo = #{deviceSerialno,jdbcType=VARCHAR}
+		</if>
+		<if test="devicePosition != null">
+			and device_position = #{devicePosition,jdbcType=VARCHAR}
+		</if>
+		<if test="deviceMaterial != null">
+			and device_material = #{deviceMaterial,jdbcType=VARCHAR}
+		</if>
+		<if test="deviceProducingdate != null">
+			and device_producingDate =
+			#{deviceProducingdate,jdbcType=TIMESTAMP}
+		</if>
+		<if test="deviceEnablingdate != null">
+			and device_enablingDate =
+			#{deviceEnablingdate,jdbcType=TIMESTAMP}
+		</if>
+		<if test="deviceKeeper != null">
+			and device_keeper = #{deviceKeeper,jdbcType=VARCHAR}
+		</if>
+		<if test="devicekindId != null">
+			and deviceKind_id = #{devicekindId,jdbcType=INTEGER}
+		</if>
+		<if test="edstatus != null">
+			and edstatus = #{edstatus,jdbcType=BIT}
+		</if>
+		<if test="sorting != null">
+			and sorting = #{sorting,jdbcType=TINYINT}
+		</if>
+		<if test="ts != null">
+			and ts = #{ts,jdbcType=TIMESTAMP}
+		</if>
+	</select>
+	
+	
+	
+</mapper>
